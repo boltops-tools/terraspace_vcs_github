@@ -10,7 +10,7 @@ module TerraspaceVcsGithub
     def comment(body)
       return unless github_token?
 
-      logger.debug "Adding comment to full_repo #{full_repo} number #{pr_number}"
+      logger.debug "Adding comment to full_repo #{full_repo} pr_number #{pr_number}"
       comments = client.issue_comments(full_repo, pr_number)
       found_comment = comments.find do |comment|
         comment.body.starts_with?(MARKER)
