@@ -22,7 +22,18 @@ module TerraspaceVcsGithub
         client.add_comment(full_repo, pr_number, body)
       end
     rescue Octokit::Unauthorized => e
-      logger.info "WARN: #{e.message}. Unable to create pull request comment. Please double check your github token"
+      # pretty long GitHub error message. so on separate line
+      logger.info <<~EOL
+        WARN: #{e.message}
+        Unable to create pull request comment. Please double check your github token.
+      EOL
+    rescue Octokit::NotFound => e # from client.issue_comments(full_repo, pr_number)
+      # can occur when user token does not have access to the repo
+      logger.info <<~EOL
+        WARN: #{e.message}
+        Unable to list comments and create pull request comment.
+        This can happen when user does not have access to the repo. Please double check your github token.
+      EOL
     end
 
     def client
